@@ -89,8 +89,13 @@ def grade_one(item_id: str, bundle_path: Path, tool: dict[str, str],
     last_err = "no attempt"
     for _ in range(2):                       # one retry on bad output
         try:
+            import shutil
+            # On Windows, subprocess needs the full path or shell=True for batch files
+            claude_exe = shutil.which("claude.cmd") or shutil.which("claude")
+            if claude_exe:
+                cmd[0] = claude_exe
             proc = subprocess.run(cmd, input=prompt, capture_output=True,
-                                  text=True, timeout=timeout)
+                                  text=True, timeout=timeout, encoding="utf-8")
         except subprocess.TimeoutExpired:
             last_err = f"timed out after {timeout}s"
             continue

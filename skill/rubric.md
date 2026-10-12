@@ -1,69 +1,14 @@
 # Rubric: is this pull request ready to submit?
 
-<!--
-THIS IS THE PART YOU WRITE (fourth week running; this is the rubric's
-final form in the sandbox). Your frame in SKILL.md executes whatever
-checks you define here, via your procedure.md. It ships empty on
-purpose: the judgment is your work.
-
-A filled rubric must contain:
-
-1. At least one row in the checks table. Each row needs all four
-   columns:
-   - Check: a short name (used in the output JSON).
-   - Evidence: exactly what to look at, and where in the package. Name
-     the part (the diff read against the plan's scope, the test
-     evidence read against the plan's test plan, the description read
-     against the diff, the repo-facts block's template asks) or a
-     location from your references/evidence-guide.md. "The PR" is not
-     a source; "the diff's changed files read against the plan's
-     stated boundary" is.
-   - Pass condition: a decision rule about the OUTCOME that someone
-     else could apply and get your answer. Judge the thing itself
-     (does the diff fall inside the plan plus its deviation notes? is
-     the claimed evidence observable?), never the write-up's shape
-     (how long the description is, how many commits there are).
-     Structure-shaped checks are what make graders disagree with
-     themselves.
-   - Weight: `required` (a fail here holds the package) or `preferred`
-     (never changes the verdict).
-
-2. A verdict rule below the table: how the check grades combine into
-   accept (submit) or reject (hold), including how `unclear` is
-   treated. The verdict space is binary. State the `unclear`
-   treatment explicitly: the frame here is YOUR SKILL.md, so a rubric
-   that stays silent is only covered if your frame's grading
-   discipline says what happens (the contract's own default is that
-   an unverifiable claim fails).
-
-Cover what actually gets bad PRs submitted. The failure families the
-lecture named ARE the harness's scoring categories, same names as the
-eval README: silent drift (the diff silently does more or less than
-the posted plan, or the description claims fidelity the diff
-contradicts), not tested (the evidence proves nothing observable, or
-the repo's own checks were never run), unreviewable (debris or
-unrelated hunks bury the change), and standards wall (the repo's
-stated template and disclosure asks are ignored). Your evidence
-guide's four headings map onto these one to one (plan fidelity =
-silent drift, test evidence = not tested, diff quality =
-unreviewable, standards and comms = standards wall), and the category
-floor is scored on exactly these names plus clear accept. A rubric
-that ignores a category will fail the eval packages built around
-that category. And remember the honest-outcome
-rule, fourth week running: a PR that honestly discloses a shortfall
-can be ready; a rubric that equates "less than everything" with
-"hold" fails the set.
--->
-
 ## Checks
 
 | Check | Evidence | Pass condition | Weight |
 |---|---|---|---|
-|  |  |  |  |
+| Plan fidelity | The diff and commit list, read against the plan's scope and boundary, and the description's claims about what changed | Every changed file falls within the plan's stated scope or explicitly noted in a deviation; the diff does not silently add unscoped work; if the description claims the PR "implements the plan exactly" or equivalently, the diff makes exactly what the plan describes and no more | required |
+| Test evidence | The test-evidence section's before/after, read against the plan's test plan and repro scenario; also the repo's stated checks or CI suite run | For each scenario the plan names: evidence is shown (before/after transcript, passing test output, or unit tests passing). The plan's primary fix must have observable before/after shown. Controls (unchanged cases) are verified when the repo's stated test suite passes (which runs existing tests); separate before/after evidence is not required for controls. | required |
+| Diff quality | The unified diff itself: changed code and structure, commits and commit messages | The fix is visible (the changed code directly addresses the stated problem); no unrelated hunks, debug output, commented-out code, dead code, pure formatting churn, or mechanical churn; commit messages are clear | required |
+| Standards and comms | The repo facts' PR template asks and stated policy (AI disclosure if present); the description and PR text against those asks | Every required template section is filled with substantive content (not boilerplate or empty); if the repo states an AI-use policy, it is honored (disclosure present if required, or policy explicitly permits undisclosed AI use) | required |
 
 ## Verdict rule
 
-<!-- State how the grades above combine into accept or reject, and how
-unclear is treated. Example shape (write your own): "accept if every
-required check passes; preferred checks never change the verdict;
-unclear counts as fail." -->
+Accept if every required check passes (a single fail holds). Unclear grades default to fail (an unverifiable claim is a failing one): if you cannot confirm that the plan's repro was actually run and the before/after shown, the test evidence check fails; if you cannot confirm from the diff whether a file belongs to the plan, it fails; if a template ask is visibly ignored or a required disclosure is absent, standards fails.

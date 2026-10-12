@@ -1,62 +1,65 @@
 # Procedure: how this tool grades a PR package
 
-<!--
-THIS IS THE PART YOU WRITE (second week running for the procedure).
-Week 3 you wrote these steps for a plan package; this week the graded
-object is a PR package, and the read that matters most is a
-side-by-side: the diff against the plan, the evidence against the test
-plan, the description against both. Your week-3 procedure is the
-pattern; do not paste it unchanged, because its read order was built
-for a different object.
-
-Your rotation is the design brief again, and this week friction routes
-three ways: a stall on WHAT to decide is a rubric gap, a stall on
-WHERE to look is a procedure gap (this file), and a stall on what the
-tool even reads or outputs is a frame gap (your SKILL.md). A complete
-procedure lets someone who has never seen a PR package before grade
-one exactly the way you would.
-
-Under each stage heading below, write the concrete steps for that
-stage. The one-line note under each heading says what a complete
-procedure must decide there. Write steps, not intentions: "read the
-plan's scope pair before opening the diff, and list the files the plan
-names" is a step; "understand the change" is a wish.
--->
-
 ## Read order
 
-<!-- What gets read, in what order, before any check is graded, and
-what to note down from each part while reading. A complete procedure
-decides where the plan sits in the order (before the diff? before the
-description?) and says why the order matters for the side-by-side
-checks that come later. -->
+Before grading any check, read the package in this order:
+
+1. **Plan scope**: Start in the plan-context block. Note the stated scope (which files, which boundaries, which changes are in vs. out of scope). Record any deviation notes that permit exceptions to the scope.
+2. **PR description**: Read the title and description. Note any claims about scope ("implements the plan exactly", "no changes beyond X", deferred work, etc.).
+3. **Diff**: Read the unified diff carefully. List every changed file and map it against the plan's scope. Note the substance of each change (what problem it addresses).
+4. **Test plan and evidence**: Review the plan's test plan (what must be verified). Then read the test-evidence section. Note whether the specific repro is run, what the before/after shows, and whether repo checks are shown passing.
+5. **Repo facts**: Note the PR template's stated asks and any AI-use policy. Compare against the PR's title, description, and commits.
+
+This order matters: you cannot judge plan fidelity without the scope first, and you cannot spot silent drift without comparing the description's claims against the actual diff.
 
 ## Evidence gathering
 
-<!-- For each evidence family your rubric's checks name, the concrete
-gathering move: which part of the package (or, live, which file, diff,
-or page per your evidence guide) to pull the fact from, and what to
-record. The load-bearing gathers this week are pairings: diff files
-against plan scope, claimed evidence against the plan's test plan and
-the repo's checks, description claims against diff contents. A
-complete procedure leaves no check whose evidence an executor would
-have to hunt for. -->
+For each evidence family, gather these facts:
+
+**Plan fidelity:**
+- List the plan's stated scope (exact file names, boundary, what is excluded)
+- List any deviation notes approved in the plan
+- List every changed file in the diff
+- Record any claim in the description about scope fidelity (e.g., "exactly as planned", "no API changes")
+- For each changed file: does it fall in scope, or is there a deviation note explaining it? If not, flag as potential drift.
+
+**Test evidence:**
+- Record the plan's test plan verbatim (the specific repro, expected behavior, what checks must run)
+- Record what the test-evidence section shows
+- For each scenario the plan names: Is the before/after shown? Is the observable difference named (not just "pass" but the actual value or error)?
+- Note whether repo-stated checks are shown running and passing
+
+**Diff quality:**
+- Scan the diff for unrelated hunks (file rewrites, config changes, structural refactoring outside the fix)
+- Scan for debug output (console.log, print, eprintln, debug statements)
+- Scan for dead code (allow(dead_code) annotations, commented-out functions, old implementations)
+- Scan for pure formatting churn (indent changes with no code change, newline-only hunks)
+- Scan commit messages: are they clear or vague ("wip", "fix", "cleanup")?
+
+**Standards and comms:**
+- List required sections from the repo template (e.g., "Closes #xxxx", "Type of change", "CHANGELOG entry", "AI disclosure")
+- For each required section: is it filled with real content in the PR, or is it missing, empty, or boilerplate?
+- If the repo states an AI-use policy: is it honored (disclosure present if required)?
 
 ## Check execution
 
-<!-- How one check runs against gathered evidence: in what order the
-checks execute, what an executor does when evidence for a check is
-genuinely absent, and when a check may be graded without re-reading
-the whole package. A complete procedure makes two executors grade the
-same package the same way. -->
+Execute checks in rubric order. For each check:
+
+1. Review the gathered evidence from its section above.
+2. Apply the pass condition exactly as written in the rubric.
+3. If evidence is genuinely absent (the package does not include test output, or the plan does not state a test plan), record that absence. An absent fact is not evidence: if the test-evidence section is empty and the rubric requires observable before/after, the evidence check fails.
+4. Grade the check: pass, fail, or unclear.
+   - **Pass**: The pass condition is met by the gathered evidence.
+   - **Fail**: The pass condition is not met or the evidence is absent.
+   - **Unclear**: You cannot determine from the package whether the condition is met (for example, a commit message is so terse you cannot tell if it is clear enough). When in doubt, default to fail.
 
 ## Verdict assembly
 
-<!-- How the per-check grades become the final accept or reject:
-apply your rubric's verdict rule, state how unclear grades enter it,
-and say what gets quoted in the output for the deciding check: the
-check whose failure the verdict turned on. When more than one check
-failed, your procedure picks which one gets quoted (first failing
-required check in rubric order is a fine rule); nothing picks it for
-you, so write the rule down. A complete procedure produces the same
-verdict from the same grades, every time. -->
+Assemble the verdict by applying the rubric's verdict rule:
+
+- If any required check fails, the verdict is **reject**.
+- If all required checks pass, the verdict is **accept**.
+- Preferred checks never change the verdict (the rubric has no preferred checks).
+- If the verdict is **reject**, quote the first failing required check in the output (that is, the check that appears earliest in the rubric's table).
+
+All four checks are required in the rubric above. If all pass, accept. If any fail, reject on that check.

@@ -1,68 +1,89 @@
 # Evidence guide: where evidence lives in a PR package
 
-<!--
-THIS IS THE PART YOU WRITE (third week running: the map stays in your
-hands). Your tool uses this guide as its map: for every kind of
-evidence a rubric check names, this file says WHERE to find it in a PR
-package and WHAT GOOD LOOKS LIKE when you do.
-
-The four families below are the harness's failure categories under
-the names the eval README uses: plan fidelity = silent-drift, test
-evidence = not-tested, diff quality = unreviewable, standards and
-comms = standards-wall. A package that fails none of them is a
-clear-accept. Under each family heading below, write:
-
-- Where it lives: the exact places to look. In an eval bundle (which
-  section of the package: the plan-context block's scope pair and test
-  plan, the candidate PR's diff, commits, description, or
-  test-evidence section, the repo-facts block's template asks and
-  stated policy). In live mode (where in your working copy and on
-  GitHub: your plan.md and its deviation notes, your branch's diff,
-  your draft title and description, your captured test output, the
-  repo's PR template and CONTRIBUTING.md).
-- What good looks like: one or two sentences someone else could apply.
-  Prefer observable conditions ("every changed file falls inside the
-  plan's stated boundary or a deviation note") over adjectives ("the
-  diff is clean").
-
-A rubric check whose evidence this guide cannot locate is a check
-nobody else can execute, and this week that cuts three ways: your
-procedure says WHEN to gather each family, this guide says WHERE, and
-your SKILL.md says the tool reads both. Write the map you wish your
-executor had.
--->
-
 ## Plan fidelity (harness category: silent-drift)
 
-<!-- Where the plan states its scope, boundary, and deviation notes,
-and where the diff shows what actually changed. What it means for a
-diff to match the plan, for an honest deviation to re-tie a mismatch,
-and what silent drift looks like in each direction (more than the
-plan, or less with no note). The description's fidelity claims read
-against the diff live here too: a description claiming more or less
-than the diff delivers is silent drift, not a comms problem. -->
+**Where it lives:**
+- The plan-context block's scope section (what files, what boundary, what is excluded)
+- The candidate PR's diff (unified format; the file paths, line ranges, and changed code)
+- The candidate PR's description (any claims about scope or fidelity)
+
+**What good looks like:**
+- Every changed file in the diff falls inside the plan's stated boundary (e.g., "only src/parser/tokenizer.c and tests/")
+- The diff makes exactly what the plan describes; no silent additions like new config options, new files outside scope, or rewritten unrelated functions
+- If the description claims "implements the posted plan exactly" or "no changes beyond the plan", the diff must match: no hidden hunks, no undisclosed extras
+- Deviation notes in the plan explicitly permit any deviation from the posted scope, and the diff honors those notes
+- If the description claims less than the plan (e.g., "deferred X"), the plan's notes must have approved the deferral before the PR was opened
+
+**What silent drift looks like:**
+- The diff changes files the plan never mentioned (e.g., a config rewrite hiding in the second hunk)
+- The description claims "exactly as planned" while the diff includes unscoped work (new flags, restructuring)
+- The plan notes a 100-line limit; the diff spans 300 lines with no note explaining why
+- A description saying "no API changes" while the diff adds a new optional parameter
 
 ## Test evidence (harness category: not-tested)
 
-<!-- Where the PR shows its proof: the test-evidence section's
-before/after against the plan's test plan and the reproduction's own
-steps, and the outcome of the repo's own checks or suite. What
-decisive looks like (an observable behavior named, the expected-after
-stated, the checks' outcome visible) next to "tests pass". -->
+**Where it lives:**
+- The test-evidence section of the candidate PR (before/after, with the specific repro run)
+- The plan-context block's test plan (what the student committed to testing)
+
+**What good looks like:**
+- The plan names a specific repro (e.g., "re-run the issue's script, expect len == 100000")
+- The test-evidence section shows that exact repro run before and after the fix
+- The before output shows the original failure (error, wrong value, or missing behavior)
+- The after output shows the expected result (no error, correct value, or expected behavior)
+- Both runs are explicitly named or labeled so the change is observable (not just "tests pass")
+- For additional test scenarios the plan names: either shown as before/after output, or verified by passing unit/integration tests in the diff
+- For unchanged cases ("verify the control still works"): the repo's stated test suite passing verifies this (no separate before/after evidence needed)
+- If the plan requires repo checks or suite pass, those are shown run and passing
+
+**What not-tested looks like:**
+- "Verified working on my machine" with no concrete repro shown
+- "Tests pass" with no indication which tests, no before/after
+- The plan requires the issue's repro; only unrelated tests are shown
+- The plan names two failure modes; only the control (unchanged path) is tested
+- The evidence runs a different repro than the plan stated (e.g., tests a single-file case when the plan required two files)
+- The plan says "verify the fix", but no new test is added and the existing suite is not shown passing
 
 ## Diff quality (harness category: unreviewable)
 
-<!-- Where the change itself lives: the unified diff and the commit
-list. What a reviewable change looks like (the fix visible, nothing
-unrelated riding along) and the debris tells: debug leftovers, dead
-code, commented-out blocks, formatting churn, drive-by edits. -->
+**Where it lives:**
+- The unified diff (changed code, line ranges, hunks)
+- The commit list and commit messages
+
+**What good looks like:**
+- The fix is visible: changed code directly addresses the stated problem (e.g., "added capacity check before buffer copy")
+- No unrelated hunks (the diff does not include rewrites of unrelated functions, configuration churn, or file moves)
+- No debug output (print statements, eprintln, console.log left behind)
+- No dead code (functions marked allow(dead_code), commented-out blocks, or old implementations)
+- No pure formatting churn (mechanical re-indents, newline-only changes, import reordering unrelated to the fix)
+- Commit messages are clear (e.g., "parser: reserve stream space for pending copy" not "wip" or "fix")
+
+**What unreviewable looks like:**
+- Commented-out debug lines in the fix itself
+- The actual fix is buried in a hunk that also re-indents an entire file
+- A commit named "fmt + cleanup" that includes both the fix and unrelated refactoring
+- A function left behind marked with allow(dead_code) with no comment
+- Multiple "first attempts" visible in comments
 
 ## Standards and comms (harness category: standards-wall)
 
-<!-- Where the repo states its asks (the repo-facts block's PR
-template sections, contributing instructions, and stated policy,
-including AI-use disclosure) and where the PR honors them: the
-stated sections filled with real content, the disclosure present,
-explicit maintainer direction in the thread engaged. What compliant
-looks like next to boilerplate or a visibly ignored ask. (Whether
-the description's claims match the diff is plan fidelity, above.) -->
+**Where it lives:**
+- The repo-facts block (PR template sections and stated contribution policy or AI-use disclosure requirement)
+- The candidate PR's title, description, and commits (whether they answer the template asks)
+- The stated AI-use policy (whether the PR honors it)
+
+**What good looks like:**
+- The repo's template asks for "Closes #xxxx" and "Tests added"; both appear in the description or commit message
+- The template asks for a CHANGELOG entry; the diff includes it (repo-facts note which file)
+- The template asks for a type-of-change label ("bug fix", "feature", etc.); the description explicitly states it
+- If the repo states "all AI usage must be disclosed", the description contains a disclosure (e.g., "This fix was developed with AI assistance")
+- If the policy says "AI use requires maintainer approval", the thread engagement shows that discussion happened (unlikely in eval but the frame must allow it)
+- All required template sections are filled with substantive content, not boilerplate
+
+**What standards-wall looks like:**
+- The repo requires "Closes #xxxx"; the description omits it
+- The repo template has a required checklist; it is not checked or is empty
+- The repo states "all AI usage must be disclosed"; the description does not mention AI
+- The description copy-pastes template boilerplate without filling it in
+- The PR template asks "screenshots if appropriate"; a visual change arrives with none
+
