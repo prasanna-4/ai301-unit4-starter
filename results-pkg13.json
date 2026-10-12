@@ -1,0 +1,43 @@
+{
+  "tool_dir": "skill",
+  "model": "sonnet",
+  "agreement": [
+    0,
+    1
+  ],
+  "results": [
+    {
+      "id": "pkg-13",
+      "verdict": "reject",
+      "failed_checks": [
+        "Test evidence"
+      ],
+      "checks": [
+        {
+          "name": "Plan fidelity",
+          "grade": "pass",
+          "evidence": "Diff touches only runtime/lua/vim/ui.lua and test/functional/lua/ui_spec.lua per plan scope; %VAR% exclusion restated matching the plan's deviation note"
+        },
+        {
+          "name": "Test evidence",
+          "grade": "fail",
+          "evidence": "Plan requires the no-ampersand control be verified unchanged, but evidence section only states 'No-ampersand control unchanged' with no output shown and no corresponding unit test in the diff"
+        },
+        {
+          "name": "Diff quality",
+          "grade": "pass",
+          "evidence": "Single-purpose gsub escape, no unrelated hunks/debug output/dead code; commit message 'fix(ui): caret-escape cmd.exe metacharacters in vim.ui.open()' is clear"
+        },
+        {
+          "name": "Standards and comms",
+          "grade": "pass",
+          "evidence": "Description contains substantive Problem and Solution sections per template; no AI-use policy stated so no disclosure required"
+        }
+      ],
+      "error": null,
+      "gold": "accept",
+      "category": "clear-accept",
+      "calibration": false
+    }
+  ]
+}

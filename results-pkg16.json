@@ -1,0 +1,41 @@
+{
+  "tool_dir": "skill",
+  "model": "sonnet",
+  "agreement": [
+    1,
+    1
+  ],
+  "results": [
+    {
+      "id": "pkg-16",
+      "verdict": "accept",
+      "failed_checks": [],
+      "checks": [
+        {
+          "name": "Plan fidelity",
+          "grade": "pass",
+          "evidence": "Diff touches only cache_images.go, cmd/image.go, and the new unit test; start-path deferral matches the plan's noted deviation"
+        },
+        {
+          "name": "Test evidence",
+          "grade": "pass",
+          "evidence": "Before/after transcript shows exit 0\u21921 on the corrupt tarball, alpine.tar control still exits 0, and go test on touched packages passes"
+        },
+        {
+          "name": "Diff quality",
+          "grade": "pass",
+          "evidence": "Aggregated-error change is narrowly scoped with no unrelated hunks, debug output, or dead code; commit messages are clear"
+        },
+        {
+          "name": "Standards and comms",
+          "grade": "pass",
+          "evidence": "Title reads as a release note, description contains 'fixes #23471', and before/after CLI examples are included per template ask"
+        }
+      ],
+      "error": null,
+      "gold": "accept",
+      "category": "clear-accept",
+      "calibration": false
+    }
+  ]
+}

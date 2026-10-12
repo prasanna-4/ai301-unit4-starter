@@ -1,0 +1,43 @@
+{
+  "tool_dir": "skill",
+  "model": "sonnet",
+  "agreement": [
+    0,
+    1
+  ],
+  "results": [
+    {
+      "id": "pkg-05",
+      "verdict": "reject",
+      "failed_checks": [
+        "Test evidence"
+      ],
+      "checks": [
+        {
+          "name": "Plan fidelity",
+          "grade": "pass",
+          "evidence": "Diff touches only crates/nu-protocol/src/config/keybindings.rs and its tests, widening the match to (name, mode, modifier, keycode) plus a one-time warning, exactly the plan's bounded scope with no uniqueness/renaming additions."
+        },
+        {
+          "name": "Test evidence",
+          "grade": "fail",
+          "evidence": "Plan's second named scenario (two same-name same-key bindings, expect one row plus a warning) and the cargo test run are only asserted in prose/unit-test code, with no shown before/after output or command output, unlike scenario 1."
+        },
+        {
+          "name": "Diff quality",
+          "grade": "pass",
+          "evidence": "No unrelated hunks, debug output, or dead code; commit messages 'config: merge named keybindings by name and key, not name alone' and 'config: warn once...' are clear."
+        },
+        {
+          "name": "Standards and comms",
+          "grade": "pass",
+          "evidence": "Description and User-facing changes sections both present and substantive; no AI-use policy stated in repo facts to honor."
+        }
+      ],
+      "error": null,
+      "gold": "accept",
+      "category": "clear-accept",
+      "calibration": false
+    }
+  ]
+}
